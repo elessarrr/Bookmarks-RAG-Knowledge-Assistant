@@ -1,0 +1,46 @@
+[project]
+name = "bookmark-rag-tool"
+version = "0.1.0"
+description = "Query your bookmarks with AI — fully local, no cloud required"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Bhavesh"}
+]
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "duckdb",
+    "sentence-transformers",
+    "beautifulsoup4",
+    "readability-lxml",
+    "requests",
+    "httpx",
+    "pyyaml"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ragas",
+    "pytest",
+    "mypy",
+    "ruff",
+    "pytest-cov"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["app", "evals"]
+python_files = ["*.test.py", "test_*.py", "*_test.py"]
+addopts = "--cov=app --cov-report=term-missing"
