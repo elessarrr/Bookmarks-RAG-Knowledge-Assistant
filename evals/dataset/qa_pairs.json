@@ -1,0 +1,32 @@
+[
+    {
+        "question": "What is DuckDB?",
+        "expected_answer_keywords": ["in-process", "SQL", "OLAP", "database"],
+        "ground_truth_urls": ["https://duckdb.org/"],
+        "difficulty": "easy"
+    },
+    {
+        "question": "How do I create an API with Python?",
+        "expected_answer_keywords": ["FastAPI", "framework", "endpoints"],
+        "ground_truth_urls": ["https://fastapi.tiangolo.com/"],
+        "difficulty": "easy"
+    },
+    {
+        "question": "What are the new features in Claude 3?",
+        "expected_answer_keywords": ["Haiku", "Sonnet", "Opus", "vision", "multimodal"],
+        "ground_truth_urls": ["https://www.anthropic.com/news/claude-3-family"],
+        "difficulty": "medium"
+    },
+    {
+        "question": "How to run tests in Python?",
+        "expected_answer_keywords": ["pytest", "framework", "testing"],
+        "ground_truth_urls": ["https://docs.pytest.org/en/7.1.x/"],
+        "difficulty": "easy"
+    },
+    {
+        "question": "What is the difference between ChatGPT and Ollama?",
+        "expected_answer_keywords": ["local", "cloud", "OpenAI", "hosting", "privacy"],
+        "ground_truth_urls": ["https://openai.com/blog/chatgpt", "https://ollama.com/"],
+        "difficulty": "hard"
+    }
+]

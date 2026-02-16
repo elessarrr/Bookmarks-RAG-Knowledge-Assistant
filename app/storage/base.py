@@ -10,6 +10,8 @@ class Chunk:
     text: str
     chunk_index: int
     embedding: List[float]
+    start_char_idx: Optional[int] = None
+    end_char_idx: Optional[int] = None
 
 @dataclass
 class RetrievedChunk:

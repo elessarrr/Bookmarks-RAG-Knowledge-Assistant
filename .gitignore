@@ -50,3 +50,4 @@ evals/results/*.json
 .coverage
 htmlcov/
 coverage.xml
+evals/results/

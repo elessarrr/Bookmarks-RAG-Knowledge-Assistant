@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-multipart
+duckdb
+sentence-transformers
+ollama
+beautifulsoup4
+requests
+numpy
+pytest
+httpx
+pytest-asyncio

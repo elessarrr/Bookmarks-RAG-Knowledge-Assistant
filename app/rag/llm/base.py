@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Generator
+from typing import List, AsyncGenerator
 
 class BaseLLM(ABC):
     """
@@ -7,7 +7,7 @@ class BaseLLM(ABC):
     """
 
     @abstractmethod
-    def generate(self, system_prompt: str, user_query: str, 
+    async def generate(self, system_prompt: str, user_query: str, 
                  context_chunks: List[str]) -> str:
         """
         Generate a response from the LLM.
@@ -23,8 +23,8 @@ class BaseLLM(ABC):
         pass
 
     @abstractmethod
-    async def generate_stream(self, system_prompt: str, user_query: str, 
-                              context_chunks: List[str]) -> Generator[str, None, None]:
+    def generate_stream(self, system_prompt: str, user_query: str, 
+                              context_chunks: List[str]) -> AsyncGenerator[str, None]:
         """
         Stream the response from the LLM.
         
