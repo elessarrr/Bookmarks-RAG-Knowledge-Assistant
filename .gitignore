@@ -51,3 +51,7 @@ evals/results/*.json
 htmlcov/
 coverage.xml
 evals/results/
+
+# Exploration Artifacts
+examples/
+libs/
