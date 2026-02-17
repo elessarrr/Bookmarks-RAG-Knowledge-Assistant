@@ -9,7 +9,8 @@ async def test_ollama_generate():
     # Mock return value
     mock_response = MagicMock()
     mock_response.json.return_value = {
-        "message": {"content": "Generated response"}
+        "response": "Generated response",
+        "done": True
     }
     mock_response.raise_for_status = MagicMock()
 
@@ -26,11 +27,11 @@ async def test_ollama_generate():
         
         # Verify call arguments
         call_args = mock_post.call_args
-        assert call_args[0][0] == "http://mock-ollama/api/chat"
+        assert call_args[0][0] == "http://mock-ollama/api/generate"
         json_body = call_args[1]["json"]
         assert json_body["model"] == "test-model"
-        # We constructed messages, check length
-        assert len(json_body["messages"]) == 2
+        # Check prompt existence instead of messages
+        assert "prompt" in json_body
         assert json_body["stream"] is False
 
 @pytest.mark.asyncio

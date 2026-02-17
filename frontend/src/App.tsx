@@ -17,7 +17,7 @@ function App() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BookMarked className="w-6 h-6 text-blue-600" />
-            <h1 className="text-xl font-bold tracking-tight">Bookmark RAG</h1>
+            <h1 className="text-xl font-bold tracking-tight">Bookmarks RAG Knowledge Assistant</h1>
           </div>
           
           <nav className="flex gap-1 bg-gray-100 p-1 rounded-lg">
@@ -71,7 +71,7 @@ function App() {
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 py-6 mt-auto">
         <div className="max-w-5xl mx-auto px-4 text-center text-sm text-gray-500">
-          <p>Local-first Bookmark RAG Tool. Powered by DuckDB, Ollama & React.</p>
+          <p>Local-first Bookmarks RAG Knowledge Assistant. Powered by DuckDB, Ollama & React.</p>
         </div>
       </footer>
     </div>

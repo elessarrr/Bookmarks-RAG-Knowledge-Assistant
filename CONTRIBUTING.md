@@ -1,4 +1,4 @@
-# Contributing to Bookmark RAG Tool
+# Contributing to Bookmarks RAG Knowledge Assistant
 
 Thank you for your interest in contributing! We welcome bug reports, feature requests, and pull requests.
 
@@ -6,8 +6,8 @@ Thank you for your interest in contributing! We welcome bug reports, feature req
 
 1. **Fork and Clone**
    ```bash
-   git clone https://github.com/yourusername/bookmark-rag-tool.git
-   cd bookmark-rag-tool
+   git clone https://github.com/yourusername/bookmarks-rag-knowledge-assistant.git
+   cd bookmarks-rag-knowledge-assistant
    ```
 
 2. **Backend**

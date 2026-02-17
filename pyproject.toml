@@ -1,5 +1,5 @@
 [project]
-name = "bookmark-rag-tool"
+name = "bookmarks-rag-knowledge-assistant"
 version = "0.1.0"
 description = "Query your bookmarks with AI — fully local, no cloud required"
 readme = "README.md"

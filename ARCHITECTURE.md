@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bookmark RAG Tool is a local-first application designed to ingest browser bookmarks and provide a chat interface using RAG (Retrieval-Augmented Generation).
+Bookmarks RAG Knowledge Assistant is a local-first application designed to ingest browser bookmarks and provide a chat interface using RAG (Retrieval-Augmented Generation).
 
 ## Components
 

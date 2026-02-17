@@ -12,7 +12,7 @@ cleanup() {
 # Trap SIGINT (Ctrl+C) and call cleanup
 trap cleanup SIGINT EXIT
 
-echo "🚀 Starting Bookmark RAG Tool..."
+echo "🚀 Starting Bookmarks RAG Knowledge Assistant..."
 
 # Start Backend in the background
 echo "👉 Starting Backend (port 8000)..."

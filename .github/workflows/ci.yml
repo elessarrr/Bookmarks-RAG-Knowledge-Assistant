@@ -1,4 +1,4 @@
-name: CI
+name: Bookmarks RAG Knowledge Assistant CI
 
 on:
   push:

@@ -12,7 +12,7 @@ def test_static_files():
     # We created dummy index.html in main.py if not exists
     response = client.get("/")
     assert response.status_code == 200
-    assert "Bookmark RAG Tool" in response.text or "API is running" in response.text
+    assert "Bookmarks RAG Knowledge Assistant" in response.text or "API is running" in response.text
 
 def test_api_routes_mounted():
     # Check if ingest router is mounted (POST /api/upload)

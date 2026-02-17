@@ -7,7 +7,7 @@ from app.routes import ingest, query
 import os
 
 app = FastAPI(
-    title="Bookmark RAG Tool",
+    title="Bookmarks RAG Knowledge Assistant",
     description="Local-first RAG tool for browser bookmarks",
     version="0.1.0"
 )
@@ -30,7 +30,7 @@ llm = None
 
 @app.on_event("startup")
 async def startup_event() -> None:
-    print(f"Starting Bookmark RAG Tool with config: {settings}")
+    print(f"Starting Bookmarks RAG Knowledge Assistant with config: {settings}")
     print("\n" + "="*50)
     print("🚀 Backend API running at: http://localhost:8000")
     print("🎨 Frontend UI running at:  http://localhost:5173")
@@ -54,6 +54,6 @@ if not os.path.exists("static"):
 # Check if index.html exists, if not create it
 if not os.path.exists("static/index.html"):
     with open("static/index.html", "w") as f:
-        f.write("<h1>Bookmark RAG Tool API is running</h1>")
+        f.write("<h1>Bookmarks RAG Knowledge Assistant API is running</h1>")
 
 app.mount("/", StaticFiles(directory="static", html=True), name="static")

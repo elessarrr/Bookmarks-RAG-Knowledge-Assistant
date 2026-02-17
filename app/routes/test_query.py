@@ -34,8 +34,8 @@ async def test_query_endpoint():
     )
     
     # Override dependency
-    from app.routes.query import get_engine
-    test_app.dependency_overrides[get_engine] = lambda: mock_engine
+    from app.routes.query import get_engine_dep
+    test_app.dependency_overrides[get_engine_dep] = lambda: mock_engine
     
     try:
         response = client.post(
