@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Compound: Nightly Review",
+      "type": "shell",
+      "command": "compound run --provider openai",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Compound: Local Review (Ollama)",
+      "type": "shell",
+      "command": "compound run --provider ollama --model llama3",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
+}
