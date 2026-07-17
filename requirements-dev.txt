@@ -1,0 +1,5 @@
+# Dev-only tooling, referenced by .github/workflows/ci.yml.
+# Runtime + eval dependencies live in requirements.txt; this file is just
+# the lint / type-check toolchain so CI doesn't pull them into the app image.
+ruff==0.15.22
+mypy==2.3.0
