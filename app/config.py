@@ -2,6 +2,14 @@ import yaml
 import os
 from dataclasses import dataclass
 
+# Judge for the RAGAS eval harness. Deliberately defaults to a model that is a
+# *different family and larger* than the generator (llm_model), so faithfulness /
+# answer-relevance aren't graded by the same model that produced the answer
+# (self-evaluation bias). Override in config.yaml; if RAM-constrained, keep it a
+# different family from llm_model even if you can't go larger.
+DEFAULT_RAGAS_JUDGE_MODEL = "qwen2.5:32b"
+
+
 @dataclass
 class Settings:
     embedding_model: str
@@ -11,6 +19,7 @@ class Settings:
     ollama_base_url: str
     duckdb_path: str
     llm_model: str
+    ragas_judge_model: str = DEFAULT_RAGAS_JUDGE_MODEL
 
     @classmethod
     def load(cls, config_path: str = "config.yaml") -> "Settings":
@@ -40,6 +49,9 @@ class Settings:
             ollama_base_url=str(config_data["ollama_base_url"]),
             duckdb_path=str(config_data["duckdb_path"]),
             llm_model=str(config_data["llm_model"]),
+            ragas_judge_model=str(
+                config_data.get("ragas_judge_model", DEFAULT_RAGAS_JUDGE_MODEL)
+            ),
         )
 
 # Load settings immediately to fail fast on startup if config is invalid

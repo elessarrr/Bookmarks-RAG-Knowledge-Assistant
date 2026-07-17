@@ -1,6 +1,10 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from evals.metrics.answer_quality import calculate_faithfulness, calculate_answer_relevance
+from evals.metrics.answer_quality import (
+    calculate_faithfulness,
+    calculate_answer_relevance,
+    get_ragas_llm,
+)
 
 @pytest.fixture
 def mock_ragas():
@@ -30,3 +34,35 @@ def test_calculate_answer_relevance(mock_ragas):
     
     score = calculate_answer_relevance("Q", "A", ["C1"])
     assert score == 0.8
+
+
+def _fake_settings(judge, generator):
+    s = MagicMock()
+    s.ragas_judge_model = judge
+    s.llm_model = generator
+    s.ollama_base_url = "http://localhost:11434"
+    return s
+
+
+def test_ragas_judge_uses_independent_judge_model():
+    """The judge must be built from ragas_judge_model, not llm_model -- otherwise
+    the generator grades its own answers (self-evaluation bias)."""
+    with patch("evals.metrics.answer_quality.ChatOllama") as mock_chat, patch(
+        "evals.metrics.answer_quality.settings", _fake_settings("qwen2.5:32b", "gpt-oss:20b")
+    ):
+        get_ragas_llm()
+
+    mock_chat.assert_called_once()
+    assert mock_chat.call_args.kwargs.get("model") == "qwen2.5:32b"
+
+
+def test_ragas_judge_warns_when_judge_equals_generator(caplog):
+    """If someone configures the judge to equal the generator, the harness should
+    say so loudly rather than silently reintroducing self-evaluation bias."""
+    with patch("evals.metrics.answer_quality.ChatOllama"), patch(
+        "evals.metrics.answer_quality.settings", _fake_settings("gpt-oss:20b", "gpt-oss:20b")
+    ):
+        with caplog.at_level("WARNING"):
+            get_ragas_llm()
+
+    assert any("judge" in r.message.lower() for r in caplog.records)

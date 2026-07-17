@@ -10,7 +10,20 @@ import logging
 logger = logging.getLogger(__name__)
 
 def get_ragas_llm():
-    return ChatOllama(model=settings.llm_model, base_url=settings.ollama_base_url)
+    """Build the RAGAS judge LLM.
+
+    Uses `ragas_judge_model` -- a deliberately separate, ideally larger/different
+    model from the generator (`llm_model`) -- so the harness doesn't grade an
+    answer with the same model that wrote it (self-evaluation bias).
+    """
+    if settings.ragas_judge_model == settings.llm_model:
+        logger.warning(
+            "RAGAS judge model (%s) is identical to the generator model -- "
+            "faithfulness/relevance scores will be self-evaluated. Set a different "
+            "ragas_judge_model in config.yaml to remove this bias.",
+            settings.ragas_judge_model,
+        )
+    return ChatOllama(model=settings.ragas_judge_model, base_url=settings.ollama_base_url)
 
 def get_ragas_embeddings():
     # Ragas needs embeddings for answer_relevancy (to embed the generated question)
