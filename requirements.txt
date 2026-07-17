@@ -2,15 +2,24 @@ fastapi
 uvicorn
 python-multipart
 duckdb
-sentence-transformers
 ollama
 beautifulsoup4
 requests
-numpy
 pytest
 httpx
 pytest-asyncio
 pytest-cov
+
+# Local-embedding stack. Pinned as a matched set: leaving these unpinned lets a
+# clean install resolve to transformers 5.x, whose tensor_parallel module
+# references `torch` before importing it (NameError at import time), which breaks
+# `import sentence_transformers` and every test that touches the embedder. This
+# transformers 4.x / torch 2.2 combo is a well-tested line for all-MiniLM-L6-v2.
+# numpy is held <2 because torch 2.2 requires it (and langchain constrains it too).
+sentence-transformers==3.0.1
+transformers==4.44.2
+torch==2.2.2
+numpy==1.26.4
 
 # Ingestion pipeline dependencies (imported directly by app/ingestion/*,
 # app/config.py, run.py -- previously missing from this file, which meant
