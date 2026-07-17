@@ -10,3 +10,26 @@ numpy
 pytest
 httpx
 pytest-asyncio
+pytest-cov
+
+# Ingestion pipeline dependencies (imported directly by app/ingestion/*,
+# app/config.py, run.py -- previously missing from this file, which meant
+# a genuinely clean `pip install -r requirements.txt` failed before the
+# app or its tests could even import).
+nltk
+readability-lxml==0.8.1
+lxml_html_clean
+PyYAML
+python-dotenv
+
+# Eval harness (evals/) -- RAGAS + langchain-community for faithfulness /
+# answer-relevance scoring. Pinned as a matched set: recent langchain-core
+# (>=1.x) and recent langchain-community (0.4.x) are mutually incompatible
+# with ragas 0.1.9's eager top-level import of ChatVertexAI, which recent
+# langchain-community no longer bundles.
+ragas==0.1.9
+langchain==0.1.16
+langchain-core==0.1.53
+langchain-community==0.0.38
+langchain-openai==0.1.6
+openai==1.30.5
