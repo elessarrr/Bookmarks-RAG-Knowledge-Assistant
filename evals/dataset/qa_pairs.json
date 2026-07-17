@@ -28,5 +28,89 @@
         "expected_answer_keywords": ["local", "cloud", "OpenAI", "hosting", "privacy"],
         "ground_truth_urls": ["https://openai.com/blog/chatgpt", "https://ollama.com/"],
         "difficulty": "hard"
+    },
+    {
+        "question": "What is React used for?",
+        "expected_answer_keywords": ["UI", "components", "JavaScript", "library"],
+        "ground_truth_urls": ["https://react.dev/"],
+        "difficulty": "easy"
+    },
+    {
+        "question": "How do I style a web app using utility CSS classes?",
+        "expected_answer_keywords": ["Tailwind", "utility", "CSS", "classes"],
+        "ground_truth_urls": ["https://tailwindcss.com/"],
+        "difficulty": "medium"
+    },
+    {
+        "question": "What is a sentence embedding model and how do I generate one?",
+        "expected_answer_keywords": ["SentenceTransformers", "embedding", "vector", "semantic"],
+        "ground_truth_urls": ["https://www.sbert.net/"],
+        "difficulty": "medium"
+    },
+    {
+        "question": "How do I run a large language model on my own machine?",
+        "expected_answer_keywords": ["Ollama", "local", "model", "run"],
+        "ground_truth_urls": ["https://ollama.com/"],
+        "difficulty": "medium"
+    },
+    {
+        "question": "What is retrieval-augmented generation?",
+        "expected_answer_keywords": ["retrieval", "context", "LLM", "grounding", "documents"],
+        "ground_truth_urls": ["https://en.wikipedia.org/wiki/Retrieval-augmented_generation"],
+        "difficulty": "medium"
+    },
+    {
+        "question": "How do I do numerical computing and work with arrays in Python?",
+        "expected_answer_keywords": ["NumPy", "array", "numerical", "vector"],
+        "ground_truth_urls": ["https://numpy.org/"],
+        "difficulty": "easy"
+    },
+    {
+        "question": "How do I load and manipulate tabular data in Python?",
+        "expected_answer_keywords": ["pandas", "DataFrame", "tabular", "data"],
+        "ground_truth_urls": ["https://pandas.pydata.org/"],
+        "difficulty": "easy"
+    },
+    {
+        "question": "Which Python library provides ready-made machine learning algorithms?",
+        "expected_answer_keywords": ["scikit-learn", "machine learning", "models", "estimators"],
+        "ground_truth_urls": ["https://scikit-learn.org/stable/"],
+        "difficulty": "easy"
+    },
+    {
+        "question": "How do I write asynchronous, non-blocking code in Python?",
+        "expected_answer_keywords": ["asyncio", "async", "await", "coroutine"],
+        "ground_truth_urls": ["https://docs.python.org/3/library/asyncio.html"],
+        "difficulty": "medium"
+    },
+    {
+        "question": "How do I build and run applications inside containers?",
+        "expected_answer_keywords": ["Docker", "container", "image", "build"],
+        "ground_truth_urls": ["https://docs.docker.com/"],
+        "difficulty": "easy"
+    },
+    {
+        "question": "What should I use to cache data so my app responds faster?",
+        "expected_answer_keywords": ["Redis", "cache", "in-memory", "latency"],
+        "ground_truth_urls": ["https://redis.io/"],
+        "difficulty": "medium"
+    },
+    {
+        "question": "For an app that already stores data in SQL, what's a good way to add fast analytical queries without running a separate server?",
+        "expected_answer_keywords": ["DuckDB", "embedded", "OLAP", "analytical", "in-process"],
+        "ground_truth_urls": ["https://duckdb.org/", "https://www.postgresql.org/"],
+        "difficulty": "hard"
+    },
+    {
+        "question": "I want to add semantic search over documents I already keep in a database — what pieces do I need?",
+        "expected_answer_keywords": ["embeddings", "SentenceTransformers", "vector", "similarity", "DuckDB"],
+        "ground_truth_urls": ["https://www.sbert.net/", "https://duckdb.org/"],
+        "difficulty": "hard"
+    },
+    {
+        "question": "Should I host my LLM behind a cloud API or run it locally, and what's the trade-off?",
+        "expected_answer_keywords": ["Ollama", "OpenAI", "local", "cloud", "privacy", "cost", "latency"],
+        "ground_truth_urls": ["https://ollama.com/", "https://openai.com/blog/chatgpt"],
+        "difficulty": "hard"
     }
 ]
