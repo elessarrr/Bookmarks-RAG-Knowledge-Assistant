@@ -47,6 +47,10 @@ class OllamaClient(BaseLLM):
                               context_chunks: List[str]) -> AsyncGenerator[str, None]:
         """
         Stream response from Ollama.
+
+        Library-only / future work: the HTTP query route and chat UI call
+        `generate()` instead. Retained for unit tests and a possible later
+        streaming endpoint.
         """
         prompt = self._build_prompt(system_prompt, user_query, context_chunks)
         

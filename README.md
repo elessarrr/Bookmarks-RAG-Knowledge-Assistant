@@ -157,6 +157,15 @@ python evals/run_evals.py
 ```
 Results are saved in `evals/results/`.
 
+## Known Limitations
+
+- **Citations are not verified:** the prompt asks the generator to cite retrieved source numbers, but the application does not programmatically validate each citation or claim.
+- **Evaluation is offline:** the 19-question retrieval/RAGAS harness, independent judge, and chunking comparison are development tools; they do not run on `/api/query`.
+- **Search is exact and unindexed:** DuckDB computes cosine similarity across stored chunks and sorts the results. This brute-force approach is suitable for a personal corpus, not large-scale vector search.
+- **Chat is non-streaming:** `OllamaClient.generate_stream` and `RAGEngine.query_stream` are library methods only. The current `/api/query` endpoint and React chat UI wait for one complete response.
+- **Single-user by design:** there is no authentication, authorization, tenant isolation, or audit log. Run it as a trusted local tool, not an internet-facing service.
+- **Web access still leaves the machine:** models and stored content stay local, but ingestion necessarily requests bookmarked websites and is subject to their availability, access controls, and robots policies.
+
 ---
 
 ## 🤝 For Potential Collaborators

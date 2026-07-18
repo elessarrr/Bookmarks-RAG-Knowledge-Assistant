@@ -54,9 +54,10 @@ Cite the sources using [Source X] format where X is the number of the source.
 
     async def query_stream(self, user_query: str, k: int = 5, filters: Optional[Dict[str, Any]] = None) -> AsyncGenerator[str, None]:
         """
-        Execute a RAG query and stream the response tokens.
-        Note: This only streams the answer text. Sources are not yielded in the stream easily unless we yield a special event first.
-        For simplicity, we just stream the text.
+        Library-only streaming helper (future work).
+
+        Not exposed by `/api/query` or the React chat UI; the production hot path
+        uses `query()`. Kept for unit coverage and a possible later streaming route.
         """
         # 1. Retrieve
         chunks = self.retriever.retrieve(user_query, k=k, filters=filters)

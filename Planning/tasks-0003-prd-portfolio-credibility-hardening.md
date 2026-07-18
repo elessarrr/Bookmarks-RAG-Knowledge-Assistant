@@ -80,7 +80,7 @@
   - [x] 3.4 Update any test fixtures that incorrectly assume the *default* generator is still `gpt-oss:20b` (e.g. `app/test_config.py` `BASE_CONFIG`) so the suite matches the new default; keep judge≠generator assertions.
   - [x] 3.5 Run `pytest app/test_config.py evals/metrics/test_answer_quality.py -q` (and full `pytest -q` before merge).
 
-- [ ] 4.0 Serve built React UI from Docker / FastAPI static mount (P1)
+- [x] 4.0 Serve built React UI from Docker / FastAPI static mount (P1)
   - [x] 4.1 Confirm Dockerfile copies Vite build to `/app/frontend/dist` and that `index.html` exists after `npm run build`.
   - [x] 4.2 Change `app/main.py` to prefer mounting `frontend/dist` (html=True) when that directory contains `index.html`; otherwise fall back to creating/serving `static/` placeholder.
   - [x] 4.3 Ensure `/health` and `/api/*` remain registered **before** the catch-all static mount; add/adjust a unit or smoke assertion if cheap (e.g. helper that picks static dir).
@@ -88,10 +88,10 @@
   - [x] 4.5 Update startup log lines if needed so they do not claim only `:5173` when Docker is serving UI from `:8000`.
 
 - [ ] 5.0 Document Known Limitations and narrow unused streaming surface (P1/P2)
-  - [ ] 5.1 Add a **Known Limitations** section to `README.md` (or `ARCHITECTURE.md` + README link) covering: prompt-only citations; eval harness offline/dev-only; DuckDB brute-force cosine; no auth / single-user; streaming library methods exist but are **not** on the `/api/query` or UI hot path.
-  - [ ] 5.2 Narrow in code comments/docstrings only: mark `RAGEngine.query_stream` and `OllamaClient.generate_stream` as unused by HTTP/UI (future work); do **not** add streaming routes; do **not** delete methods that unit tests still exercise.
-  - [ ] 5.3 Grep README/ARCHITECTURE for overclaims (robots, vector powerhouse, “streaming chat”, “strict adherence”) and fix any remaining contradictions.
-  - [ ] 5.4 Optional: sync one paragraph in interview prep doc if it still says streaming is an unfinished accident rather than a deliberate non-goal for this pass.
+  - [x] 5.1 Add a **Known Limitations** section to `README.md` (or `ARCHITECTURE.md` + README link) covering: prompt-only citations; eval harness offline/dev-only; DuckDB brute-force cosine; no auth / single-user; streaming library methods exist but are **not** on the `/api/query` or UI hot path.
+  - [x] 5.2 Narrow in code comments/docstrings only: mark `RAGEngine.query_stream` and `OllamaClient.generate_stream` as unused by HTTP/UI (future work); do **not** add streaming routes; do **not** delete methods that unit tests still exercise.
+  - [x] 5.3 Grep README/ARCHITECTURE for overclaims (robots, vector powerhouse, “streaming chat”, “strict adherence”) and fix any remaining contradictions.
+  - [x] 5.4 Optional: sync one paragraph in interview prep doc if it still says streaming is an unfinished accident rather than a deliberate non-goal for this pass.
 
 - [ ] 6.0 Add config-loading failure-path tests (P2)
   - [ ] 6.1 Write failing tests in `app/test_config.py` for: missing config file → `FileNotFoundError`; invalid YAML → `RuntimeError` (or current exception type); missing required key(s) → `ValueError` with field names in the message.

@@ -45,7 +45,9 @@ Bookmarks RAG Knowledge Assistant is a local-first application designed to inges
 1. **Ingestion**:
    - Parse HTML -> Filter duplicates -> Fetch URL -> Clean HTML -> Chunk Text -> Embed -> Store in DuckDB.
 2. **Query**:
-   - Embed Query -> Vector Search (DuckDB) -> Filter Results -> Construct Prompt -> LLM Generation -> Stream Response.
+   - Embed Query -> Exact cosine search (DuckDB) -> Filter Results -> Construct Prompt -> Non-streaming LLM Generation.
+
+Streaming helpers exist in `app/rag/engine.py` and `app/rag/llm/ollama_client.py`, but the HTTP query route and React UI intentionally use the non-streaming path. See `README.md` → **Known Limitations**.
 
 ## Data Flow
 

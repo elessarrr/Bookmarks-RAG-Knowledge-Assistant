@@ -27,6 +27,9 @@ class BaseLLM(ABC):
                               context_chunks: List[str]) -> AsyncGenerator[str, None]:
         """
         Stream the response from the LLM.
+
+        Optional library surface for future streaming routes/UI. Current
+        production chat uses `generate()` via `/api/query`.
         
         Args:
             system_prompt: The instruction for the LLM.

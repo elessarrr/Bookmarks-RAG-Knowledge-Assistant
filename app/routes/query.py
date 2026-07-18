@@ -53,6 +53,8 @@ async def query_endpoint(
     request: QueryRequest,
     engine: RAGEngine = Depends(get_engine_dep)
 ) -> QueryResponse:
+    # Non-streaming hot path: returns one complete JSON answer. Do not wire
+    # engine.query_stream here without also updating the React chat client.
     try:
         response = await engine.query(request.question, k=request.k, filters=request.filters)
         
