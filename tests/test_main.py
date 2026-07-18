@@ -1,5 +1,7 @@
 from fastapi.testclient import TestClient
-from app.main import app
+from app import main as main_module
+
+app = main_module.app
 
 client = TestClient(app)
 
@@ -9,10 +11,30 @@ def test_health_check():
     assert response.json() == {"status": "ok", "version": "0.1.0"}
 
 def test_static_files():
-    # We created dummy index.html in main.py if not exists
     response = client.get("/")
     assert response.status_code == 200
-    assert "Bookmarks RAG Knowledge Assistant" in response.text or "API is running" in response.text
+    assert "Bookmarks RAG Knowledge Assistant" in response.text
+
+def test_select_static_directory_prefers_frontend_build(tmp_path):
+    frontend_dist = tmp_path / "frontend" / "dist"
+    frontend_dist.mkdir(parents=True)
+    (frontend_dist / "index.html").write_text("<div id='root'></div>")
+    fallback_static = tmp_path / "static"
+
+    select_static_directory = getattr(main_module, "select_static_directory", None)
+
+    assert select_static_directory is not None
+    assert select_static_directory(frontend_dist, fallback_static) == str(frontend_dist)
+
+def test_select_static_directory_creates_fallback(tmp_path):
+    frontend_dist = tmp_path / "frontend" / "dist"
+    fallback_static = tmp_path / "static"
+
+    select_static_directory = getattr(main_module, "select_static_directory", None)
+
+    assert select_static_directory is not None
+    assert select_static_directory(frontend_dist, fallback_static) == str(fallback_static)
+    assert (fallback_static / "index.html").is_file()
 
 def test_api_routes_mounted():
     # Check if ingest router is mounted (POST /api/upload)

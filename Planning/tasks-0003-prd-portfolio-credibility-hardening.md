@@ -73,7 +73,7 @@
   - [x] 2.4 Wire `fetch_url` to call `check_robots_txt` before GET; on False return `FetchResult(..., error="Blocked by robots.txt")` without fetching page body.
   - [x] 2.5 Run `pytest app/ingestion/test_fetcher.py -q` — all green, zero skips for robots.
 
-- [ ] 3.0 Align default generator model and README claims (P0)
+- [x] 3.0 Align default generator model and README claims (P0)
   - [x] 3.1 Change `config.yaml` `llm_model` from `gpt-oss:20b` to `llama3.2:3b`; leave `ragas_judge_model` as a different family (keep `qwen2.5:32b` or document RAM-constrained alternate).
   - [x] 3.2 Update README Quick Start: `ollama pull llama3.2:3b` (and embedding model pulls as already documented); note `gpt-oss:20b` as an **optional** higher-quality override via `config.yaml`.
   - [x] 3.3 Update README robots section to state Disallow is honored; robots.txt fetch failure → allow + warn (matches code after 2.0). Remove “short-circuited” wording. Keep DuckDB linear-scan / not-a-powerhouse honesty.
@@ -81,11 +81,11 @@
   - [x] 3.5 Run `pytest app/test_config.py evals/metrics/test_answer_quality.py -q` (and full `pytest -q` before merge).
 
 - [ ] 4.0 Serve built React UI from Docker / FastAPI static mount (P1)
-  - [ ] 4.1 Confirm Dockerfile copies Vite build to `/app/frontend/dist` and that `index.html` exists after `npm run build`.
-  - [ ] 4.2 Change `app/main.py` to prefer mounting `frontend/dist` (html=True) when that directory contains `index.html`; otherwise fall back to creating/serving `static/` placeholder.
-  - [ ] 4.3 Ensure `/health` and `/api/*` remain registered **before** the catch-all static mount; add/adjust a unit or smoke assertion if cheap (e.g. helper that picks static dir).
-  - [ ] 4.4 Verify locally: Vite dev (`:5173` → API `:8000`) still works; Docker path serves React shell (upload/chat), not `<h1>…API is running</h1>`.
-  - [ ] 4.5 Update startup log lines if needed so they do not claim only `:5173` when Docker is serving UI from `:8000`.
+  - [x] 4.1 Confirm Dockerfile copies Vite build to `/app/frontend/dist` and that `index.html` exists after `npm run build`.
+  - [x] 4.2 Change `app/main.py` to prefer mounting `frontend/dist` (html=True) when that directory contains `index.html`; otherwise fall back to creating/serving `static/` placeholder.
+  - [x] 4.3 Ensure `/health` and `/api/*` remain registered **before** the catch-all static mount; add/adjust a unit or smoke assertion if cheap (e.g. helper that picks static dir).
+  - [x] 4.4 Verify locally: Vite dev (`:5173` → API `:8000`) still works; Docker path serves React shell (upload/chat), not `<h1>…API is running</h1>`.
+  - [x] 4.5 Update startup log lines if needed so they do not claim only `:5173` when Docker is serving UI from `:8000`.
 
 - [ ] 5.0 Document Known Limitations and narrow unused streaming surface (P1/P2)
   - [ ] 5.1 Add a **Known Limitations** section to `README.md` (or `ARCHITECTURE.md` + README link) covering: prompt-only citations; eval harness offline/dev-only; DuckDB brute-force cosine; no auth / single-user; streaming library methods exist but are **not** on the `/api/query` or UI hot path.
