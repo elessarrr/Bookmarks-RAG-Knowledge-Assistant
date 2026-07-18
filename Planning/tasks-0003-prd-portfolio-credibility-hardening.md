@@ -40,9 +40,11 @@
 
 ### Docker static UI (Task 4.0)
 - `app/main.py` — mount `frontend/dist` when present; fallback to `static/` placeholder.
+- `run.py` — bind `0.0.0.0` with reload disabled so Docker can serve the built UI externally.
 - `Dockerfile` — already copies dist to `/app/frontend/dist` (verify path matches mount).
 - `docker-compose.yml` — no behaviour change expected; verify after mount fix.
-- `tests/test_main.py` — extend if useful to assert static directory selection without requiring a full Docker build.
+- `tests/test_main.py` — assert static directory selection without requiring a full Docker build.
+- `tests/test_run.py` — pin container entrypoint bind/reload behavior.
 
 ### Docs + stream narrow (Task 5.0)
 - `README.md` — **Known Limitations** section.
@@ -87,13 +89,13 @@
   - [x] 4.4 Verify locally: Vite dev (`:5173` → API `:8000`) still works; Docker path serves React shell (upload/chat), not `<h1>…API is running</h1>`.
   - [x] 4.5 Update startup log lines if needed so they do not claim only `:5173` when Docker is serving UI from `:8000`.
 
-- [ ] 5.0 Document Known Limitations and narrow unused streaming surface (P1/P2)
+- [x] 5.0 Document Known Limitations and narrow unused streaming surface (P1/P2)
   - [x] 5.1 Add a **Known Limitations** section to `README.md` (or `ARCHITECTURE.md` + README link) covering: prompt-only citations; eval harness offline/dev-only; DuckDB brute-force cosine; no auth / single-user; streaming library methods exist but are **not** on the `/api/query` or UI hot path.
   - [x] 5.2 Narrow in code comments/docstrings only: mark `RAGEngine.query_stream` and `OllamaClient.generate_stream` as unused by HTTP/UI (future work); do **not** add streaming routes; do **not** delete methods that unit tests still exercise.
   - [x] 5.3 Grep README/ARCHITECTURE for overclaims (robots, vector powerhouse, “streaming chat”, “strict adherence”) and fix any remaining contradictions.
   - [x] 5.4 Optional: sync one paragraph in interview prep doc if it still says streaming is an unfinished accident rather than a deliberate non-goal for this pass.
 
-- [ ] 6.0 Add config-loading failure-path tests (P2)
-  - [ ] 6.1 Write failing tests in `app/test_config.py` for: missing config file → `FileNotFoundError`; invalid YAML → `RuntimeError` (or current exception type); missing required key(s) → `ValueError` with field names in the message.
-  - [ ] 6.2 Adjust `Settings.load` messages only if needed for clarity — no behaviour change to happy path.
-  - [ ] 6.3 Run `pytest app/test_config.py -q`, then full `pytest -q` regression before considering the PRD done.
+- [x] 6.0 Add config-loading failure-path tests (P2)
+  - [x] 6.1 Write failing tests in `app/test_config.py` for: missing config file → `FileNotFoundError`; invalid YAML → `RuntimeError` (or current exception type); missing required key(s) → `ValueError` with field names in the message.
+  - [x] 6.2 Adjust `Settings.load` messages only if needed for clarity — no behaviour change to happy path.
+  - [x] 6.3 Run `pytest app/test_config.py -q`, then full `pytest -q` regression before considering the PRD done.
