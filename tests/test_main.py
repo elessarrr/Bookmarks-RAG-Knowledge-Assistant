@@ -1,3 +1,5 @@
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.testclient import TestClient
 from app import main as main_module
 
@@ -10,10 +12,31 @@ def test_health_check():
     assert response.status_code == 200
     assert response.json() == {"status": "ok", "version": "0.1.0"}
 
-def test_static_files():
-    response = client.get("/")
+def test_built_static_files_serve_react_shell(tmp_path):
+    frontend_dist = tmp_path / "frontend" / "dist"
+    frontend_dist.mkdir(parents=True)
+    (frontend_dist / "index.html").write_text(
+        '<html><body><div id="root"></div></body></html>',
+        encoding="utf-8",
+    )
+
+    static_app = FastAPI()
+    static_app.mount(
+        "/",
+        StaticFiles(
+            directory=main_module.select_static_directory(
+                frontend_dist,
+                tmp_path / "static",
+            ),
+            html=True,
+        ),
+    )
+
+    response = TestClient(static_app).get("/")
+
     assert response.status_code == 200
-    assert "Bookmarks RAG Knowledge Assistant" in response.text
+    assert '<div id="root"></div>' in response.text
+    assert "API is running" not in response.text
 
 def test_select_static_directory_prefers_frontend_build(tmp_path):
     frontend_dist = tmp_path / "frontend" / "dist"

@@ -57,6 +57,14 @@
 - `app/config.py` — already raises `FileNotFoundError` / `RuntimeError` / `ValueError`; ensure messages are clear.
 - `app/test_config.py` — add missing-file, invalid-YAML, missing-required-keys tests.
 
+### Completion audit fixes (Task 7.0)
+- `pyproject.toml` — include `tests/` in default pytest discovery so Docker/static smoke coverage gates CI.
+- `tests/test_main.py` — distinguish the built React root from the API placeholder.
+- `app/config.py` / `app/test_config.py` — honor and test the Docker Compose `OLLAMA_BASE_URL` override.
+- `README.md` — remove unused embedding-model pull and remaining local/privacy overclaims; document Docker and robots fail-open limits.
+- `.github/workflows/ci.yml` — bare `pytest` inherits the corrected test discovery configuration.
+- `Planning/master_context_documents/mcd_2026-07-18.md` — record the Docker config override and expanded regression gate.
+
 ---
 
 ## Tasks
@@ -99,3 +107,11 @@
   - [x] 6.1 Write failing tests in `app/test_config.py` for: missing config file → `FileNotFoundError`; invalid YAML → `RuntimeError` (or current exception type); missing required key(s) → `ValueError` with field names in the message.
   - [x] 6.2 Adjust `Settings.load` messages only if needed for clarity — no behaviour change to happy path.
   - [x] 6.3 Run `pytest app/test_config.py -q`, then full `pytest -q` regression before considering the PRD done.
+
+- [ ] 7.0 Close completion-audit gaps
+  - [x] 7.1 Add `tests/` to default pytest discovery and confirm Task 4 tests are collected by the same bare `pytest` command used in CI.
+  - [x] 7.2 Tighten the static-root smoke assertion so the API placeholder cannot satisfy the React UI test.
+  - [x] 7.3 RED: add a config test proving `OLLAMA_BASE_URL` overrides YAML for Docker Compose.
+  - [x] 7.4 GREEN: implement the environment override without changing other config-loading behavior.
+  - [x] 7.5 Align README setup/privacy/Docker/robots claims with the actual implementation.
+  - [x] 7.6 Run config, Task 4, frontend build, and full regression checks; update Relevant Files and commit the completed parent task.

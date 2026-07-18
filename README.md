@@ -2,7 +2,7 @@
 
 > **Turn your browser bookmarks into an interactive, privacy-first knowledge base.**
 
-**Bookmarks RAG Knowledge Assistant** is a local-first **Retrieval-Augmented Generation (RAG)** tool designed to unlock insights from your accumulated browser bookmarks. By ingesting Netscape-format HTML exports (supported by Chrome, Firefox, Safari, Edge), it transforms static links into a queryable vector database, allowing you to chat with your saved content using state-of-the-art local LLMs.
+**Bookmarks RAG Knowledge Assistant** is a local-first **Retrieval-Augmented Generation (RAG)** tool designed to unlock insights from your accumulated browser bookmarks. By ingesting Netscape-format HTML exports (supported by Chrome, Firefox, Safari, Edge), it transforms static links into a queryable vector database, allowing you to chat with your saved content using a local LLM.
 
 I built this project to solve the "digital hoarding" problem: we all bookmark hundreds of interesting articles, papers, and tools, but we rarely revisit them because searching through a nested folder structure is inefficient. The hypothesis was that a RAG system could surface these forgotten gems by allowing semantic queries like *"What was that article about local-first software architecture?"* rather than forcing you to remember the exact title or folder.
 
@@ -10,7 +10,7 @@ I built this project to solve the "digital hoarding" problem: we all bookmark hu
 
 ## 🏗️ What I Built
 
-*   **Privacy-First Architecture**: Zero data exfiltration. Runs 100% locally using Ollama and local embedding models.
+*   **Privacy-First AI Processing**: Generation, embeddings, and indexed content stay local through Ollama, sentence-transformers, and DuckDB. Ingestion still contacts the bookmarked websites.
 *   **Advanced RAG Pipeline**:
     *   **Smart Ingestion**: Parses and cleans HTML content from bookmarked URLs using `BeautifulSoup` and `readability-lxml`.
     *   **Semantic Chunking**: Intelligently splits content to preserve context for better retrieval.
@@ -18,13 +18,13 @@ I built this project to solve the "digital hoarding" problem: we all bookmark hu
 *   **Local Backend**: Powered by **FastAPI** and **DuckDB** for an in-process, single-user workflow.
 *   **Modern Reactive UI**: A polished **React 19** + **Vite** frontend with **Tailwind CSS 4** for seamless bookmark management and chat.
 *   **Built-in Evaluation**: Includes a `ragas`-based evaluation framework to benchmark retrieval accuracy and generation quality.
-*   **Technical Rigor**: TDD with high test coverage, type-safe Python (mypy), and automated CI pipelines.
+*   **Technical Rigor**: Pytest coverage plus automated CI, with Ruff and mypy surfaced as advisory quality checks.
 
 ---
 
 ## � Why I'm Archiving This
 
-While the technology works flawlessly, I am archiving this repository to focus on more impactful solutions.
+The V1 demonstrates the end-to-end workflow, but its manual export/upload journey and documented technical limits make it a prototype rather than a finished product. I am archiving it to focus on more impactful solutions.
 
 **The Pivot Insight:**
 After building V1 and using it daily, I realized the core user journey is flawed. The friction of *exporting* bookmarks to an HTML file and *uploading* them to a separate tool is too high for casual use. People don't forget bookmarks because they lack a search tool; they forget them because the retrieval mechanism isn't integrated into their daily workflow (the browser itself).
@@ -46,7 +46,7 @@ If I were to restart this project today, I would build a **Browser Extension** t
 
 ### 1. Stale or Dead URLs in Bookmarks
 **Challenge:** Bookmarks are often "time capsules"—links saved years ago frequently point to domains that have lapsed, content that has moved, or endpoints returning 404/500 errors.
-**Lesson & Mitigation:** Trust but verify. I implemented pre-ingestion checks (HEAD/GET requests) to validate link freshness.
+**Lesson & Mitigation:** Trust but verify. Ingestion checks HTTP responses and records failures instead of indexing unusable pages.
 **Insight:** A robust system must surface a "last alive" timestamp to the user so they understand why a specific source was skipped, rather than silently failing.
 
 ### 2. robots.txt & Anti-Bot Defenses
@@ -57,7 +57,7 @@ If I were to restart this project today, I would build a **Browser Extension** t
 **Insight:** Instead of fighting anti-bot measures, the system should maintain an "allow list" of scrape-friendly domains. When a page is disallowed or gated, it is safer to log the reason and exclude it from the vector index than to risk a block.
 
 ### 3. RAG Coverage Ceiling
-**Challenge:** The current pipeline is strictly "grounded"—it only answers questions for which relevant bookmarks exist. If the answer isn't in your saved links, it replies "I don't know." While this prevents hallucination, it limits utility.
+**Challenge:** The prompt tells the model to answer from retrieved bookmarks and say when context is insufficient, but that convention is not programmatically enforced and cannot guarantee the absence of hallucinations.
 **Lesson & Roadmap:**
 A future iteration would benefit from a **Hybrid Generative Architecture**. This would involve:
 1.  Prioritizing bookmark embeddings in the context window.
@@ -75,7 +75,7 @@ This approach balances personal context with general utility, preventing the "em
 - **Database**: `DuckDB` (In-process SQL OLAP & Vector Store)
 - **AI & ML**:
     - **LLM Runtime**: `Ollama` (Local Llama 3, Mistral, etc.)
-    - **Embeddings**: `sentence-transformers` (Hugging Face), `nomic-embed-text`
+    - **Embeddings**: `sentence-transformers` with `all-MiniLM-L6-v2` (Hugging Face)
 - **Data Processing**: `BeautifulSoup4`, `readability-lxml`, `httpx` (Async HTTP)
 - **Testing**: `pytest`, `pytest-asyncio`, `pytest-cov`
 
@@ -95,7 +95,7 @@ This approach balances personal context with general utility, preventing the "em
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.10+
+- Python 3.11+
 - Node.js 18+ (for frontend)
 - [Ollama](https://ollama.com/) (running locally)
 - [uv](https://github.com/astral-sh/uv) (recommended for Python package management)
@@ -114,10 +114,9 @@ uv pip install -r requirements.txt
 
 # Start Ollama (ensure you have models pulled)
 ollama pull llama3.2:3b
-ollama pull nomic-embed-text
 ```
 
-The default generator is `llama3.2:3b`, chosen for practical local use on a laptop. For a higher-quality, higher-memory option, set `llm_model: "gpt-oss:20b"` in `config.yaml` and pull that model explicitly.
+The default generator is `llama3.2:3b`, chosen for practical local use on a laptop. The configured `all-MiniLM-L6-v2` embedding model is downloaded by sentence-transformers on first use; it is not an Ollama model. For a higher-quality, higher-memory generator, set `llm_model: "gpt-oss:20b"` in `config.yaml` and pull that model explicitly.
 
 ### 2. Frontend Setup
 
@@ -136,6 +135,15 @@ uvicorn app.main:app --reload
 ```
 
 Open `http://localhost:5173` in your browser.
+
+### 4. Running with Docker
+
+```bash
+docker compose up --build -d
+docker compose exec ollama ollama pull llama3.2:3b
+```
+
+Open `http://localhost:8000`. FastAPI serves the built React UI and uses the Compose Ollama service URL supplied through `OLLAMA_BASE_URL`.
 
 ---
 
@@ -165,6 +173,7 @@ Results are saved in `evals/results/`.
 - **Chat is non-streaming:** `OllamaClient.generate_stream` and `RAGEngine.query_stream` are library methods only. The current `/api/query` endpoint and React chat UI wait for one complete response.
 - **Single-user by design:** there is no authentication, authorization, tenant isolation, or audit log. Run it as a trusted local tool, not an internet-facing service.
 - **Web access still leaves the machine:** models and stored content stay local, but ingestion necessarily requests bookmarked websites and is subject to their availability, access controls, and robots policies.
+- **Robots failures are fail-open:** explicit Disallow rules are honored, but an unreachable or timed-out `robots.txt` allows ingestion to continue with a warning.
 
 ---
 

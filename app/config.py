@@ -46,7 +46,10 @@ class Settings:
             chunk_size=int(config_data["chunk_size"]),
             chunk_overlap=int(config_data["chunk_overlap"]),
             top_k=int(config_data["top_k"]),
-            ollama_base_url=str(config_data["ollama_base_url"]),
+            ollama_base_url=os.environ.get(
+                "OLLAMA_BASE_URL",
+                str(config_data["ollama_base_url"]),
+            ),
             duckdb_path=str(config_data["duckdb_path"]),
             llm_model=str(config_data["llm_model"]),
             ragas_judge_model=str(

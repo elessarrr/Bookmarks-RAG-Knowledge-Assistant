@@ -75,3 +75,12 @@ def test_missing_required_keys_raise_value_error(tmp_path):
     message = str(exc_info.value)
     assert "chunk_overlap" in message
     assert "llm_model" in message
+
+
+def test_ollama_base_url_environment_overrides_yaml(tmp_path, monkeypatch):
+    path = _write(tmp_path, BASE_CONFIG)
+    monkeypatch.setenv("OLLAMA_BASE_URL", "http://ollama:11434")
+
+    settings = Settings.load(path)
+
+    assert settings.ollama_base_url == "http://ollama:11434"
