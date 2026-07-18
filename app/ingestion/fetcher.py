@@ -1,9 +1,12 @@
 import httpx
 import asyncio
+import logging
 from dataclasses import dataclass
 from typing import Optional, Dict
 from urllib.parse import urlparse, urljoin
 from urllib.robotparser import RobotFileParser
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class FetchResult:
@@ -19,30 +22,47 @@ _robots_cache: Dict[str, RobotFileParser] = {}
 # User-Agent to identify our bot (some sites block empty/default UA)
 USER_AGENT = "BookmarkRAGBot/1.0 (+http://localhost:8000)"
 
-async def check_robots_txt(url: str, user_agent: str = "*") -> bool:
+async def check_robots_txt(url: str, user_agent: str = USER_AGENT) -> bool:
     """
     Checks if the URL is allowed by robots.txt.
     Returns True if allowed, False otherwise.
     """
-    # SKIP ROBOTS CHECK for now to improve success rate for personal use
-    # In a real crawler we should respect this, but for a personal bookmark tool
-    # dealing with strict sites (FB, LinkedIn, etc.), we often need to bypass.
-    return True
+    parsed = urlparse(url)
+    base_url = f"{parsed.scheme}://{parsed.netloc}"
 
-    # Original implementation commented out for reference:
-    # parsed = urlparse(url)
-    # base_url = f"{parsed.scheme}://{parsed.netloc}"
-    # robots_url = urljoin(base_url, "/robots.txt")
-    # ...
+    parser = _robots_cache.get(base_url)
+    if parser is None:
+        robots_url = urljoin(base_url, "/robots.txt")
+        parser = RobotFileParser()
+        parser.set_url(robots_url)
+
+        try:
+            async with httpx.AsyncClient(
+                timeout=10.0,
+                follow_redirects=True,
+                headers={"User-Agent": USER_AGENT},
+            ) as client:
+                response = await client.get(robots_url)
+                response.raise_for_status()
+        except httpx.HTTPError as exc:
+            # Personal-bookmark UX is fail-open when robots.txt is unreachable,
+            # while any explicit Disallow from a successfully fetched file is honored.
+            logger.warning("Could not fetch robots.txt at %s; allowing %s: %s", robots_url, url, exc)
+            return True
+
+        parser.parse(response.text.splitlines())
+        _robots_cache[base_url] = parser
+
+    return parser.can_fetch(user_agent, url)
 
 async def fetch_url(url: str) -> FetchResult:
     """
     Fetches the content of a URL using httpx.
     Respects robots.txt and handles errors.
     """
-    # 1. Check robots.txt (Disabled for higher success rate)
-    # if not await check_robots_txt(url):
-    #     return FetchResult(url, None, 0, "Blocked by robots.txt")
+    # 1. Check robots.txt
+    if not await check_robots_txt(url):
+        return FetchResult(url, None, 0, "Blocked by robots.txt")
 
     # 2. Rate limiting (simple sleep)
     await asyncio.sleep(0.5)

@@ -59,7 +59,7 @@
 
 ## Tasks
 
-- [ ] 1.0 Fix hollow Ollama streaming unit test (P0)
+- [x] 1.0 Fix hollow Ollama streaming unit test (P0)
   - [x] 1.1 Read `OllamaClient.generate_stream` and note exact URL, JSON body (`stream: true`), and NDJSON field (`response`) used for tokens.
   - [x] 1.2 Rewrite `test_ollama_generate_stream` in `app/rag/llm/test_ollama_client.py`: properly mock `httpx.AsyncClient` as an async context manager whose `.stream(...)` returns an async context manager yielding a response with `aiter_lines()` of Ollama `/api/generate` NDJSON (`{"response": "...", "done": false}` / `done: true`).
   - [x] 1.3 Assert concatenated yielded chunks equal the mocked token text (e.g. `"Hello World"`).
@@ -67,11 +67,11 @@
   - [x] 1.5 Run `pytest app/rag/llm/test_ollama_client.py -q` — both generate and generate_stream tests must pass; confirm emptying the assert body would fail the test.
 
 - [ ] 2.0 Restore real robots.txt enforcement with allow+warn fail-open (P0)
-  - [ ] 2.1 Unskip `test_robots_block` in `app/ingestion/test_fetcher.py` and confirm it fails for the right reason (robots check not wired / always True).
-  - [ ] 2.2 Add tests for `check_robots_txt` behaviour: (a) explicit Disallow → False; (b) robots.txt unreachable/timeout → True + warning logged; (c) same-domain second call uses cache (optional but preferred).
-  - [ ] 2.3 Implement real `check_robots_txt` using `RobotFileParser`, per-domain `_robots_cache`, project `USER_AGENT`, and **allow + warn** when robots.txt cannot be fetched.
-  - [ ] 2.4 Wire `fetch_url` to call `check_robots_txt` before GET; on False return `FetchResult(..., error="Blocked by robots.txt")` without fetching page body.
-  - [ ] 2.5 Run `pytest app/ingestion/test_fetcher.py -q` — all green, zero skips for robots.
+  - [x] 2.1 Unskip `test_robots_block` in `app/ingestion/test_fetcher.py` and confirm it fails for the right reason (robots check not wired / always True).
+  - [x] 2.2 Add tests for `check_robots_txt` behaviour: (a) explicit Disallow → False; (b) robots.txt unreachable/timeout → True + warning logged; (c) same-domain second call uses cache (optional but preferred).
+  - [x] 2.3 Implement real `check_robots_txt` using `RobotFileParser`, per-domain `_robots_cache`, project `USER_AGENT`, and **allow + warn** when robots.txt cannot be fetched.
+  - [x] 2.4 Wire `fetch_url` to call `check_robots_txt` before GET; on False return `FetchResult(..., error="Blocked by robots.txt")` without fetching page body.
+  - [x] 2.5 Run `pytest app/ingestion/test_fetcher.py -q` — all green, zero skips for robots.
 
 - [ ] 3.0 Align default generator model and README claims (P0)
   - [ ] 3.1 Change `config.yaml` `llm_model` from `gpt-oss:20b` to `llama3.2:3b`; leave `ragas_judge_model` as a different family (keep `qwen2.5:32b` or document RAM-constrained alternate).

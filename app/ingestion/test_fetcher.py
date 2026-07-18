@@ -1,7 +1,14 @@
+import logging
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
-from app.ingestion.fetcher import fetch_url
+from app.ingestion.fetcher import _robots_cache, check_robots_txt, fetch_url
 import httpx
+
+@pytest.fixture(autouse=True)
+def clear_robots_cache():
+    _robots_cache.clear()
+    yield
+    _robots_cache.clear()
 
 @pytest.mark.asyncio
 async def test_fetch_success():
@@ -60,15 +67,58 @@ async def test_fetch_timeout():
             assert result.content is None
             assert "Timeout" in result.error
 
-@pytest.mark.skip(reason="Robots.txt check is disabled in current implementation")
+@pytest.mark.asyncio
 async def test_robots_block():
     with patch("app.ingestion.fetcher.check_robots_txt", new_callable=AsyncMock) as mock_robots:
         mock_robots.return_value = False # Blocked
 
-        result = await fetch_url("https://example.com/secret")
+        with patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get:
+            result = await fetch_url("https://example.com/secret")
         
         assert result.content is None
         assert "Blocked by robots.txt" in result.error
+        mock_get.assert_not_awaited()
+
+@pytest.mark.asyncio
+async def test_robots_explicit_disallow():
+    mock_response = MagicMock()
+    mock_response.text = "User-agent: *\nDisallow: /secret"
+    mock_response.raise_for_status = MagicMock()
+
+    with patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get:
+        mock_get.return_value = mock_response
+
+        allowed = await check_robots_txt("https://example.com/secret")
+
+    assert allowed is False
+    mock_get.assert_awaited_once_with("https://example.com/robots.txt")
+
+@pytest.mark.asyncio
+async def test_robots_unreachable_allows_with_warning(caplog):
+    with patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get:
+        mock_get.side_effect = httpx.TimeoutException("Timeout")
+
+        with caplog.at_level(logging.WARNING):
+            allowed = await check_robots_txt("https://example.com/article")
+
+    assert allowed is True
+    assert "Could not fetch robots.txt" in caplog.text
+
+@pytest.mark.asyncio
+async def test_robots_same_domain_uses_cache():
+    mock_response = MagicMock()
+    mock_response.text = "User-agent: *\nDisallow:"
+    mock_response.raise_for_status = MagicMock()
+
+    with patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get:
+        mock_get.return_value = mock_response
+
+        first_allowed = await check_robots_txt("https://example.com/first")
+        second_allowed = await check_robots_txt("https://example.com/second")
+
+    assert first_allowed is True
+    assert second_allowed is True
+    mock_get.assert_awaited_once_with("https://example.com/robots.txt")
 
 @pytest.mark.asyncio
 async def test_non_html_content():
