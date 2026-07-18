@@ -108,7 +108,7 @@
   - [x] 6.2 Adjust `Settings.load` messages only if needed for clarity — no behaviour change to happy path.
   - [x] 6.3 Run `pytest app/test_config.py -q`, then full `pytest -q` regression before considering the PRD done.
 
-- [ ] 7.0 Close completion-audit gaps
+- [x] 7.0 Close completion-audit gaps
   - [x] 7.1 Add `tests/` to default pytest discovery and confirm Task 4 tests are collected by the same bare `pytest` command used in CI.
   - [x] 7.2 Tighten the static-root smoke assertion so the API placeholder cannot satisfy the React UI test.
   - [x] 7.3 RED: add a config test proving `OLLAMA_BASE_URL` overrides YAML for Docker Compose.
