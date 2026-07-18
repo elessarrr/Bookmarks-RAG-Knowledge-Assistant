@@ -66,7 +66,7 @@
   - [x] 1.4 Assert the stream request targets `{base_url}/api/generate` and JSON includes `"stream": True` and the expected model name.
   - [x] 1.5 Run `pytest app/rag/llm/test_ollama_client.py -q` — both generate and generate_stream tests must pass; confirm emptying the assert body would fail the test.
 
-- [ ] 2.0 Restore real robots.txt enforcement with allow+warn fail-open (P0)
+- [x] 2.0 Restore real robots.txt enforcement with allow+warn fail-open (P0)
   - [x] 2.1 Unskip `test_robots_block` in `app/ingestion/test_fetcher.py` and confirm it fails for the right reason (robots check not wired / always True).
   - [x] 2.2 Add tests for `check_robots_txt` behaviour: (a) explicit Disallow → False; (b) robots.txt unreachable/timeout → True + warning logged; (c) same-domain second call uses cache (optional but preferred).
   - [x] 2.3 Implement real `check_robots_txt` using `RobotFileParser`, per-domain `_robots_cache`, project `USER_AGENT`, and **allow + warn** when robots.txt cannot be fetched.
@@ -74,11 +74,11 @@
   - [x] 2.5 Run `pytest app/ingestion/test_fetcher.py -q` — all green, zero skips for robots.
 
 - [ ] 3.0 Align default generator model and README claims (P0)
-  - [ ] 3.1 Change `config.yaml` `llm_model` from `gpt-oss:20b` to `llama3.2:3b`; leave `ragas_judge_model` as a different family (keep `qwen2.5:32b` or document RAM-constrained alternate).
-  - [ ] 3.2 Update README Quick Start: `ollama pull llama3.2:3b` (and embedding model pulls as already documented); note `gpt-oss:20b` as an **optional** higher-quality override via `config.yaml`.
-  - [ ] 3.3 Update README robots section to state Disallow is honored; robots.txt fetch failure → allow + warn (matches code after 2.0). Remove “short-circuited” wording. Keep DuckDB linear-scan / not-a-powerhouse honesty.
-  - [ ] 3.4 Update any test fixtures that incorrectly assume the *default* generator is still `gpt-oss:20b` (e.g. `app/test_config.py` `BASE_CONFIG`) so the suite matches the new default; keep judge≠generator assertions.
-  - [ ] 3.5 Run `pytest app/test_config.py evals/metrics/test_answer_quality.py -q` (and full `pytest -q` before merge).
+  - [x] 3.1 Change `config.yaml` `llm_model` from `gpt-oss:20b` to `llama3.2:3b`; leave `ragas_judge_model` as a different family (keep `qwen2.5:32b` or document RAM-constrained alternate).
+  - [x] 3.2 Update README Quick Start: `ollama pull llama3.2:3b` (and embedding model pulls as already documented); note `gpt-oss:20b` as an **optional** higher-quality override via `config.yaml`.
+  - [x] 3.3 Update README robots section to state Disallow is honored; robots.txt fetch failure → allow + warn (matches code after 2.0). Remove “short-circuited” wording. Keep DuckDB linear-scan / not-a-powerhouse honesty.
+  - [x] 3.4 Update any test fixtures that incorrectly assume the *default* generator is still `gpt-oss:20b` (e.g. `app/test_config.py` `BASE_CONFIG`) so the suite matches the new default; keep judge≠generator assertions.
+  - [x] 3.5 Run `pytest app/test_config.py evals/metrics/test_answer_quality.py -q` (and full `pytest -q` before merge).
 
 - [ ] 4.0 Serve built React UI from Docker / FastAPI static mount (P1)
   - [ ] 4.1 Confirm Dockerfile copies Vite build to `/app/frontend/dist` and that `index.html` exists after `npm run build`.

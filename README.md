@@ -14,8 +14,8 @@ I built this project to solve the "digital hoarding" problem: we all bookmark hu
 *   **Advanced RAG Pipeline**:
     *   **Smart Ingestion**: Parses and cleans HTML content from bookmarked URLs using `BeautifulSoup` and `readability-lxml`.
     *   **Semantic Chunking**: Intelligently splits content to preserve context for better retrieval.
-    *   **Hybrid Search**: Combines vector similarity search (embeddings) with structured metadata filtering.
-*   **High-Performance Backend**: Powered by **FastAPI** and **DuckDB** for sub-millisecond vector retrieval and async processing.
+    *   **Filtered Semantic Search**: Combines exact cosine similarity over embeddings with structured metadata filters.
+*   **Local Backend**: Powered by **FastAPI** and **DuckDB** for an in-process, single-user workflow.
 *   **Modern Reactive UI**: A polished **React 19** + **Vite** frontend with **Tailwind CSS 4** for seamless bookmark management and chat.
 *   **Built-in Evaluation**: Includes a `ragas`-based evaluation framework to benchmark retrieval accuracy and generation quality.
 *   **Technical Rigor**: TDD with high test coverage, type-safe Python (mypy), and automated CI pipelines.
@@ -36,8 +36,8 @@ If I were to restart this project today, I would build a **Browser Extension** t
 
 ## 🧠 What I Learned
 
-*   **DuckDB is a Vector Powerhouse**: Using DuckDB for both metadata storage and vector similarity search simplified the architecture immensely compared to managing a separate Postgres + pgvector or ChromaDB instance.
-*   **The "Context Window" Trap**: Simply retrieving the top-k chunks isn't enough for high-quality answers. Implementing a re-ranking step (or hybrid search) significantly improved the relevance of answers for broad queries.
+*   **DuckDB is a pragmatic prototype store**: Using DuckDB for metadata and exact cosine search simplified the local architecture compared with managing Postgres + pgvector or ChromaDB. The current search is an unindexed linear scan, not a vector-search powerhouse.
+*   **The "Context Window" Trap**: Simply retrieving the top-k chunks is not enough for consistently high-quality answers. Re-ranking or hybrid search is a future improvement, not part of the current hot path.
 *   **Evaluation is Critical**: Building the `ragas` evaluation pipeline early allowed for objective measurement of how chunking strategy changes affected answer quality.
 
 ---
@@ -52,7 +52,7 @@ If I were to restart this project today, I would build a **Browser Extension** t
 ### 2. robots.txt & Anti-Bot Defenses
 **Challenge:** Many high-value sites block automated crawling via `robots.txt` or deploy sophisticated bot-detection (CAPTCHA, IP rate-limiting, JS challenges). Aggressive scraping risks IP bans.
 **Lesson & Mitigation:**
-*   **Respect Standards:** Strictly adhere to `robots.txt` and implement polite crawl delays.
+*   **Respect Standards:** Explicit `robots.txt` Disallow rules are honored before page content is fetched. If the robots file itself is unreachable, this personal tool allows the URL and logs a warning.
 *   **Authentication Walls:** A subset of bookmarks (paywalls, social media) are unreachable by stateless scrapers.
 **Insight:** Instead of fighting anti-bot measures, the system should maintain an "allow list" of scrape-friendly domains. When a page is disallowed or gated, it is safer to log the reason and exclude it from the vector index than to risk a block.
 
@@ -113,9 +113,11 @@ source .venv/bin/activate
 uv pip install -r requirements.txt
 
 # Start Ollama (ensure you have models pulled)
-ollama pull llama3
+ollama pull llama3.2:3b
 ollama pull nomic-embed-text
 ```
+
+The default generator is `llama3.2:3b`, chosen for practical local use on a laptop. For a higher-quality, higher-memory option, set `llm_model: "gpt-oss:20b"` in `config.yaml` and pull that model explicitly.
 
 ### 2. Frontend Setup
 

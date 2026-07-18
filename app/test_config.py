@@ -19,7 +19,7 @@ chunk_overlap: 50
 top_k: 5
 ollama_base_url: "http://localhost:11434"
 duckdb_path: "./data/bookmarks.duckdb"
-llm_model: "gpt-oss:20b"
+llm_model: "llama3.2:3b"
 """
 
 
