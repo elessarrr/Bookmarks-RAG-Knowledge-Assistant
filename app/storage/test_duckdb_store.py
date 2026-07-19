@@ -13,6 +13,16 @@ def store():
     store.initialize()
     return store
 
+def test_file_store_creates_missing_parent_directory(tmp_path):
+    db_path = tmp_path / "missing" / "bookmarks.duckdb"
+
+    store = DuckDBStore(db_path=str(db_path))
+    try:
+        assert db_path.parent.is_dir()
+        assert db_path.is_file()
+    finally:
+        store.conn.close()
+
 def test_upsert_bookmark(store):
     url = "https://example.com"
     title = "Example"
