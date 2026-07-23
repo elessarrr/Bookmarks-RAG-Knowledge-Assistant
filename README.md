@@ -8,7 +8,7 @@ I built this project to solve the "digital hoarding" problem: we all bookmark hu
 
 ---
 
-## 🏗️ What I Built
+## What I Built
 
 *   **Privacy-First AI Processing**: Generation, embeddings, and indexed content stay local through Ollama, sentence-transformers, and DuckDB. Ingestion still contacts the bookmarked websites.
 *   **Advanced RAG Pipeline**:
@@ -22,7 +22,7 @@ I built this project to solve the "digital hoarding" problem: we all bookmark hu
 
 ---
 
-## � Why I'm Archiving This
+## Why I'm Archiving This
 
 The V1 demonstrates the end-to-end workflow, but its manual export/upload journey and documented technical limits make it a prototype rather than a finished product. I am archiving it to focus on more impactful solutions.
 
@@ -34,7 +34,7 @@ If I were to restart this project today, I would build a **Browser Extension** t
 
 ---
 
-## 🧠 What I Learned
+## What I Learned
 
 *   **DuckDB is a pragmatic prototype store**: Using DuckDB for metadata and exact cosine search simplified the local architecture compared with managing Postgres + pgvector or ChromaDB. The current search is an unindexed linear scan, not a vector-search powerhouse.
 *   **The "Context Window" Trap**: Simply retrieving the top-k chunks is not enough for consistently high-quality answers. Re-ranking or hybrid search is a future improvement, not part of the current hot path.
@@ -42,7 +42,7 @@ If I were to restart this project today, I would build a **Browser Extension** t
 
 ---
 
-## 🏔️ Challenges & Lessons Learned
+## Challenges & Lessons Learned
 
 ### 1. Stale or Dead URLs in Bookmarks
 **Challenge:** Bookmarks are often "time capsules"—links saved years ago frequently point to domains that have lapsed, content that has moved, or endpoints returning 404/500 errors.
@@ -68,7 +68,7 @@ This approach balances personal context with general utility, preventing the "em
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Backend (Python)
 - **Framework**: `FastAPI` (Async web API), `Uvicorn` (ASGI Server)
@@ -92,7 +92,7 @@ This approach balances personal context with general utility, preventing the "em
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.11+
@@ -116,7 +116,7 @@ uv pip install -r requirements.txt
 ollama pull llama3.2:3b
 ```
 
-The default generator is `llama3.2:3b`, chosen for practical local use on a laptop. The configured `all-MiniLM-L6-v2` embedding model is downloaded by sentence-transformers on first use; it is not an Ollama model. For a higher-quality, higher-memory generator, set `llm_model: "gpt-oss:20b"` in `config.yaml` and pull that model explicitly.
+The default generator is `llama3.2:3b`, chosen for practical local use on a laptop. The configured `all-MiniLM-L6-v2` embedding model is downloaded by sentence-transformers on first use; it is not an Ollama model. For a higher-quality generator, update `llm_model` in `config.yaml` to a larger tag (e.g. `llama3:70b`) and pull it explicitly with `ollama pull`.
 
 ### 2. Frontend Setup
 
@@ -147,7 +147,7 @@ Open `http://localhost:8000`. FastAPI serves the built React UI and uses the Com
 
 ---
 
-## 🧪 Development
+## Development
 
 ### Running Tests
 ```bash
@@ -177,17 +177,6 @@ Results are saved in `evals/results/`.
 
 ---
 
-## 🤝 For Potential Collaborators
-
-This repository demonstrates **end-to-end AI product development**, moving from a Product Requirements Document (PRD) to a shipping codebase with a rigorous evaluation framework. It highlights experience in:
-1.  **Architecting Local-First Systems**: Designing privacy-preserving AI systems that don't rely on expensive cloud APIs.
-2.  **Implementing Production Patterns**: Using `DuckDB` for vector storage, `FastAPI` for async endpoints, and `React` for a responsive UI.
-3.  **Validating Product Assumptions**: The decision to archive this project reflects a product-first mindset—recognizing when a solution (standalone app) doesn't match the optimal user workflow (browser extension) and being willing to pivot based on that insight.
-
-I am open to discussing the architectural decisions, the evaluation methodology, or the rationale behind the product pivot.
-
----
-
-## 📄 License
+## License
 
 MIT License. See [LICENSE](LICENSE) for details.
